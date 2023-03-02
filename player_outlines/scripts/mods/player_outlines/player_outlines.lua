@@ -1,5 +1,6 @@
 local mod = get_mod("player_outlines")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
+local PlayerManager = require("scripts/foundation/managers/player/player_manager")
 local UPDATE_WAITING_PERIOD = 0.5
 local known_units = {}
 
@@ -11,6 +12,11 @@ local IGNORED_DISABLED_OUTLINE_STATES = {
 	grabbed = false,
 	catapulted = false,
 	consumed = false
+}
+
+local instances = {
+	wmt_player_assistance = nil,
+	wmt_nameplate_combat = nil
 }
 
 local spawn_hologram = function(world, resources, parent_unit, state_name)
@@ -107,8 +113,6 @@ local get_outline_name = function()
 	elseif show_outline then
 		return "default_outlines_always"
 	end
-
-	return nil
 end
 
 local clear_outlines = function(self, unit)
@@ -157,7 +161,8 @@ local set_outline = function(func, self, unit, dt, t)
 end
 
 local reset_outlines = function()
-	for _, value in ipairs(known_units) do
+	for i, value in ipairs(known_units) do
+		if not value then table.remove(known_units, i) end
 		clear_outlines(value.self, value.unit)
 		if mod:get("show_mesh") or mod:get("show_outline") then
 			set_outline(value.func, value.self, value.unit, value.dt, value.t)
@@ -165,14 +170,28 @@ local reset_outlines = function()
 	end
 end
 
-mod.on_setting_changed = function()
+mod.on_setting_changed = function(setting_id)
 	-- Instantly update visuals when a setting is changed.
-	reset_outlines()
+	if setting_id == "show_hologram"
+			or setting_id == "show_mesh"
+			or setting_id == "show_outline"
+			or setting_id == "show_in_hub" then
+		reset_outlines()
+	elseif setting_id == "mission_nameplates_max_distance" then
+		if instances.wmt_nameplate_combat then
+			instances.wmt_nameplate_combat.max_distance =
+				mod:get("mission_nameplates_max_distance")
+		end
+	elseif setting_id == "assist_marker_max_distance" then
+		if instances.wmt_player_assistance then
+			instances.wmt_player_assistance.max_distance =
+				mod:get("assist_marker_max_distance")
+		end
+	end
 end
 
-mod.on_game_state_changed = function()
-	-- Make sure the list doesn't get big in long sessions.
-	known_units = {}
+mod.on_unload = function(exit_game)
+	reset_outlines()
 end
 
 mod:hook(CLASS.PlayerUnitOutlineExtension, "extensions_ready", function(func, self, world, unit)
@@ -184,7 +203,18 @@ mod:hook(CLASS.PlayerUnitOutlineExtension, "extensions_ready", function(func, se
 	self._smart_tag_system = smart_tag_system
 end)
 
+-- The bit that actually keeps things current and working.. Probably could be
+-- a bit more performant.
 mod:hook(CLASS.PlayerUnitOutlineExtension, "update", function(func, self, unit, dt, t)
 	return set_outline(func, self, unit, dt, t)
 end)
 
+mod:hook_require("scripts/ui/hud/elements/world_markers/templates/world_marker_template_player_assistance", function(instance)
+	instances.wmt_player_assistance = instance
+	mod.on_setting_changed("assist_marker_max_distance")
+end)
+
+mod:hook_require("scripts/ui/hud/elements/world_markers/templates/world_marker_template_nameplate_combat", function(instance)
+	instances.wmt_nameplate_combat = instance
+	mod.on_setting_changed("mission_nameplates_max_distance")
+end)

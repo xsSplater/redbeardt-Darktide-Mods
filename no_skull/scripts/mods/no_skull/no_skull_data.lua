@@ -1,7 +1,7 @@
 local mod = get_mod("no_skull")
 
 return {
-	name = "no_skull",
+	name = "No Skull",
 	description = mod:localize("mod_description"),
 	is_togglable = true
 }
