@@ -1,26 +1,25 @@
 LogManager = {
-	mod = nil,
-	prefix = ""
+	mod = nil
 }
 
-function LogManager:new(mod, prefix)
+function LogManager:new(mod)
 	self.mod = mod
-	self.prefix = prefix
 	return self
 end
 
 function LogManager:echo(text)
-	self.mod:echo(self.prefix .. text)
+	self.mod:echo(text or "nil")
 end
 
 function LogManager:error(text)
-	self.mod:error(self.prefix .. text)
+	self.mod:error(text or "nil")
 end
 
 function LogManager:warning(text)
-	self.mod:warning(self.prefix .. text)
+	self.mod:warning(text or "nil")
 end
 
 function LogManager:debug(text)
-	self.mod:debug(self.prefix .. text)
+	if not self.mod:get("debug_mode") then return end
+	self.mod:echo(text or "nil")
 end

@@ -10,6 +10,11 @@ return {
 				setting_id = "escape_defocuses",
 				type = "checkbox",
 				default_value = true
+			},
+			{
+				setting_id = "debug_mode",
+				type = "checkbox",
+				default_value = false
 			}
 		}
 	}

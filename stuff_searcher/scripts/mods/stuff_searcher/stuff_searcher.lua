@@ -1,25 +1,48 @@
 Mods.file.dofile("stuff_searcher/scripts/mods/stuff_searcher/log_manager")
+Mods.file.dofile("stuff_searcher/scripts/mods/stuff_searcher/utils")
+Mods.file.dofile("stuff_searcher/scripts/mods/stuff_searcher/search")
 
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local TextInputPassTemplates = require("scripts/ui/pass_templates/text_input_pass_templates")
+local LocalizationManager = require("scripts/managers/localization/localization_manager")
 local MasterItems = require("scripts/backend/master_items")
 local mod = get_mod("stuff_searcher")
 local views = "scripts/ui/views/"
-local logman = LogManager:new(mod, "stuff_searcher: ")
+local logman = LogManager:new(mod)
+
+if Utils.get_locale_language() ~= "en" then
+	local allow_localization_manager_init = false
+
+	mod:hook("LocalizationManager", "init", function(func, self)
+		if allow_localization_manager_init then
+			if func then func(self) end
+		end
+	end)
+
+	-- Init another LocalizationManager explicitly for English so it can be searched
+	-- in addition to the locale language.
+	local localize_en = LocalizationManager:new()
+	allow_localization_manager_init = true
+	localize_en._backend_localizations = {}
+	localize_en._string_cache = Script.new_map(2048)
+	localize_en._original_language = "en"
+	localize_en._enable_string_tags = false
+	localize_en._language = "en"
+	localize_en._status = "empty"
+	localize_en:_set_resource_property_preference_order("en")
+end
 
 local is_writing = function()
-	mod:info(mod.input_field and mod.input_field.content and
-		mod.input_field.content.is_writing)
 	return mod.input_field and mod.input_field.content and
 		mod.input_field.content.is_writing
 end
 
 local set_is_writing = function(value)
 	if not mod.input_field then
-		return logman:error("set_is_writing: input_field == nil.")
+		return logman:debug("set_is_writing: input_field == nil.")
 	elseif not mod.input_field.content then
-		return logman:error("set_is_writing: input_field.content == nil")
+		return logman:debug("set_is_writing: input_field.content == nil")
 	end
 
 	mod.input_field.content.is_writing = value
@@ -29,17 +52,26 @@ local build_search_string = function(item)
 	-- Add item's display name.
 	local str = Localize(item.__master_item.display_name) ..
 		" " .. item.__master_item.itemLevel
+	local en_locale = Utils.get_locale_language() == "en"
 
 	-- Add all of the item's traits/blessings
 	if item.__master_item.traits then
 		for _, v in ipairs(item.__master_item.traits) do
-			str = str .. " " .. Localize(MasterItems.get_item(v.id).display_name)
+			local master_item = MasterItems.get_item(v.id)
+			str = str .. " " .. Localize(master_item.display_name)
+			if not en_locale then
+				str = str .. " " .. localize_en:localize(master_item.display_name)
+			end
 		end
 	end
 
 	if item.__master_item.perks then
 		for _, v in ipairs(item.__master_item.perks) do
-			str = str .. " " .. Localize(MasterItems.get_item(v.id).description)
+			local master_item = MasterItems.get_item(v.id)
+			str = str .. " " .. Localize(master_item.description)
+			if not en_locale then
+				str = str .. " " .. localize_en:localize(master_item.description)
+			end
 		end
 	end
 
@@ -52,11 +84,11 @@ local apply_to_layout = function(view)
 	mod.input_field = view._widgets_by_name["stuff_searcher_input"]
 
 	if not view then
-		return logman:error("apply_to_layout: view == nil")
+		return logman:debug("apply_to_layout: view == nil")
 	elseif not view._item_grid then
-		return logman:error("apply_to_layout: view._item_grid == nil")
+		return logman:debug("apply_to_layout: view._item_grid == nil")
 	elseif not mod.input_field then
-		return logman:error("apply_to_layout: mod.input_field == nil")
+		return logman:debug("apply_to_layout: mod.input_field == nil")
 	end
 
 	-- Used to focus the input field for next update.
@@ -99,6 +131,7 @@ local apply_to_layout = function(view)
 	local layout = view._stored_layout
 
 	-- Build list containing only matching items.
+	-- local criteria = StuffSearch.compile_criteria(term)
 	for i = 1, #layout do
 		if layout[i] and layout[i].item and layout[i].item.__master_item and
 				layout[i].item.__master_item.display_name then
@@ -167,7 +200,7 @@ end
 -- Takes focus from search field if player clicks on grid entries.
 local stop_writing_passthru = function(func, ...)
 	set_is_writing(false)
-	func(...)
+	if func then func(...) end
 end
 
 mod:hook_require(views.."inventory_weapons_view/inventory_weapons_view_definitions", append_to_view_defs)
@@ -226,7 +259,7 @@ mod:hook("ViewElementTabMenu", "update", function(func, self, ...)
 		self._was_handling_navigation_input or self._is_handling_navigation_input
 	self._is_handling_navigation_input =
 		not is_writing() and self._was_handling_navigation_input
-	func(self, ...)
+	if func then func(self, ...) end
 end)
 
 -- Prevents Legend hotkeys from triggering while search field is focused.
@@ -237,5 +270,5 @@ mod:hook("ViewElementInputLegend", "_handle_input", function(func, ...)
 		return
 	end
 
-	func(...)
+	if func then func(...) end
 end)
