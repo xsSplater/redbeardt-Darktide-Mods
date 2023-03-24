@@ -7,4 +7,6 @@ base
 animation_events
 bot_spawner
 sorted_mission_grid
+ShowEquippedInLobby
 mod_load_order.txt
+crosshairs_fix

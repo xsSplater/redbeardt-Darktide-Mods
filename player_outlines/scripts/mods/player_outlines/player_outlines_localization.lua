@@ -32,7 +32,7 @@ return {
 		["zh-cn"] = "协助标签最大距离",
 	},
 	assist_marker_max_distance_tt = {
-		en = "Sets the maximum distance at which players' assist markers wil be visible above them when the player is down. Defaults to 200. Set to zero to hide them entirely.",
+		en = "Sets the maximum distance at which players' assist markers will be visible above them when the player is down. Defaults to 200. Set to zero to hide them entirely.",
 		["zh-cn"] = "设置玩家倒地时的协助图标最大显示距离。默认为 200。设置为 0 表示完全隐藏。",
 	}
 }
