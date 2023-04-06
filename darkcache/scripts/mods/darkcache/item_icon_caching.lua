@@ -1,0 +1,36 @@
+-- local dc = DarkCache
+
+-- local cache = {}
+
+-- mod:hook("UIManager", "load_item_icon", function(func, self, real_item, cb, render_context, dummy_profile)
+-- 	local gear_id = real_item.gear_id or real_item.name
+--
+-- 	if cache[gear_id] then
+-- 		dc.dev.echo("Retrieving from cache with gear_id " .. gear_id)
+-- 		return cache[gear_id]
+-- 	end
+--
+-- 	local loaded_item = func(self, real_item, cb, render_context, dummy_profile)
+-- 	cache[gear_id] = loaded_item
+--
+-- 	return loaded_item
+-- end)
+
+-- Make grid elements retain loaded images so they aren't constantly unloading
+-- and reloading.
+-- dc.mod:hook("ViewElementGrid", "update_grid_widgets_visibility", function(func, self)
+-- 	if not (self._grid_widgets or self._content_blueprints) then
+-- 		return func(self)
+-- 	end
+--
+-- 	for _, v in pairs(self._grid_widgets) do
+-- 		local template = self._content_blueprints[v.type]
+-- 		if template.load_icon then
+-- 			template.unload_icon = nil
+-- 			v.content.render_icon = true
+-- 		end
+-- 	end
+--
+-- 	return func(self)
+-- end)
+--

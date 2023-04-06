@@ -1,11 +1,7 @@
 local mod = get_mod("tweax")
 
-Mods.file.dofile("tweax/tweax_hud_element_smart_tagging")
--- mod:dofile("tweax/tweax_hud_element_smart_tagging")
-
 local SETTINGS = {
 	THREAT_SKULL_MARKER_MAX_DISTANCE = "threat_skull_marker_max_distance",
-	FIX_MARKER_COLOURS = "fix_marker_colours",
 }
 
 -- WMT == "world marker template"

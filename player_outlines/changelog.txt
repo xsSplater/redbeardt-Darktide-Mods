@@ -1,0 +1,6 @@
+# 1.2
+- Refactored code to make it simpler.
+- Integrated zh-cn localisation (deluxghost's PR).
+- Added settings caching (performance).
+- Added interval to PlayerUnitOutlineExtension update hook to make it a little more performant.
+- (Hopefully) fixed console log spam that occurred sometimes when reloading mods.

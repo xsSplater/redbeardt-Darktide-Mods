@@ -13,7 +13,7 @@ mod:hook_safe("HudElementCrosshair", "_get_current_charge_level", function(self)
 	local action_module_charge_component = unit_data_extension:read_component("action_module_charge")
 	local charge_level = action_module_charge_component.charge_level
 
-	if charge_level == 1 then
+	if charge_level > 0.99 then
 		self._widget.style.charge_mask_left.color = { 255, 255, 0, 0 }
 		self._widget.style.charge_mask_right.color = { 255, 255, 0, 0 }
 	else
@@ -21,3 +21,15 @@ mod:hook_safe("HudElementCrosshair", "_get_current_charge_level", function(self)
 		self._widget.style.charge_mask_right.color = UIHudSettings.color_tint_main_1
 	end
 end)
+
+-- mod:hook_safe("PlayerUnitWeaponExtension", "on_slot_wielded", function(self, slot_name, ...)
+-- 	if slot_name == "secondary" then
+-- 		return
+-- 	end
+-- end)
+
+-- mod:hook_origin("PlayerUnitWeaponExtension", "start_action", function(self, action_name, t)
+-- 	local weapon = self:_wielded_weapon(self._inventory_component, self._weapons)
+-- 	local template = weapon.template
+-- 	self:_start_action(action_name, action_settings, t, nil, "forced")
+-- end)
