@@ -144,7 +144,7 @@ local apply_to_layout = function(view)
 	end
 
 	view._filtered_offer_items_layout = filtered
-	view:_sort_grid_layout(view._sort_options and view._sort_options[view.selected_sort_option_index or 1].sort_function)
+	view:_sort_grid_layout(view._sort_options and view._sort_options[view._selected_sort_option_index or 1].sort_function)
 end
 
 local append_to_view_defs = function(defs)
