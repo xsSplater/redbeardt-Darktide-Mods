@@ -11,10 +11,6 @@ return {
 				type = "numeric",
 				range = { 0, 200 },
 				default_value = 200
-			}, {
-				setting_id = "fix_marker_colours",
-				type = "checkbox",
-				default_value = false
 			}
 		}
 	}
