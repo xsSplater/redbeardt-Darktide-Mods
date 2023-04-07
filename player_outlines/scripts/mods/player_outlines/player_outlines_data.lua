@@ -1,7 +1,7 @@
 local mod = get_mod("player_outlines")
 
 return {
-	name = "Player Outlines",
+	name = mod:localize("mod_name"),
 	description = mod:localize("mod_description"),
 	options = {
 		widgets = {
