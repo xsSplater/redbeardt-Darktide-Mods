@@ -2,6 +2,7 @@ return {
 	mod_name = {
 		en = "Player Outlines",
 		ru = "Контуры игроков",
+		["zh-cn"] = "玩家边框轮廓",
 	},
 	mod_description = {
 		en = "Enables you to optionally show the default skeleton-hologram, a highlighted mesh, and an outline, in any combination. The mesh is visible through walls only, but the outline is always visible. Enjoy!",

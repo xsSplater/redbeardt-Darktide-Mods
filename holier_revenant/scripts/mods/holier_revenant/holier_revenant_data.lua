@@ -1,7 +1,7 @@
 local mod = get_mod("holier_revenant")
 
 return {
-	name = "Holier Revenant",
+	name = mod:localize("mod_name"),
 	description = mod:localize("mod_description"),
 	options = {
 		widgets = {

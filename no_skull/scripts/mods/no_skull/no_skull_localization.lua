@@ -2,6 +2,7 @@ return {
 	mod_name = {
 		en = "No Skull",
 		ru = "Без черепа",
+		["zh-cn"] = "删除骷髅图标",
 	},
 	mod_description = {
 		en = "Removes the skull icon from threat-tagging because sometimes it gets in the way.",

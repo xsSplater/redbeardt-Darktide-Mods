@@ -4,7 +4,7 @@ local red_light = Color.ui_hud_red_light(255, true)
 local orange_light = Color.ui_orange_light(255, true)
 
 return {
-	name = "Status Colours",
+	name = mod:localize("mod_name"),
 	description = mod:localize("mod_description"),
 	options = {
 		widgets = {

@@ -1,7 +1,7 @@
 local mod = get_mod("pickup_notif_tweaker")
 
 return {
-	name = "Pickup Notifications Tweaker",
+	name = mod:localize("mod_name"),
 	description = mod:localize("mod_description"),
 	is_togglable = true,
 	options = {

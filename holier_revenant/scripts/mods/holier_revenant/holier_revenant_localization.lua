@@ -1,4 +1,8 @@
 return {
+	mod_name = {
+		en = "Holier Revenant",
+		["zh-cn"] = "镰刀死神",
+	},
 	mod_description = {
 		en = "Adds an icon like your class ability icon, but it shows the status of your Holy Revenant buff.",
 		["zh-cn"] = "添加一个狂信徒镰刀死神被动能力的状态图标，类似角色主动能力。",

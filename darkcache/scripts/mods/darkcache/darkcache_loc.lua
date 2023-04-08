@@ -1,4 +1,8 @@
 return {
+	mod_name = {
+		en = "DarkCache",
+		["zh-cn"] = "暗潮缓存",
+	},
 	mod_description = {
 		en = "Adds prefetching and caching to various menus in the Mourningstar so that they're more responsive. Toggles for each type of cache are available in-case something breaks, or you want to forcibly refresh a cache type.",
 		["zh-cn"] = "为哀星号上的各种菜单启用预读取和缓存，使它们响应更快。如果遇到问题，或者想强制刷新，则可以单独开关某种类型的缓存。",

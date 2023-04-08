@@ -1,4 +1,8 @@
 return {
+	mod_name = {
+		en = "Pickup Notifications Tweaker",
+		["zh-cn"] = "拾取通知优化",
+	},
 	mod_description = {
 		en = "Gives some control over the material pickup notification system.",
 		["zh-cn"] = "控制材料拾取通知系统的行为。",

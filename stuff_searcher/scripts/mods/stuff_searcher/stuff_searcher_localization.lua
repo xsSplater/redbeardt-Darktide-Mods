@@ -1,4 +1,8 @@
 return {
+	mod_name = {
+		en = "Stuff Searcher",
+		["zh-cn"] = "物品搜索栏",
+	},
 	mod_description = {
 		en = "Adds a search textbox to the inventory, armoury, melk's, and hadron's, so that the player can filter the item list. Searches can currently be done on item name, total rating, perks, and blessings, although curios are definitely not working properly yet. See NexusMods for more info.",
 		["zh-cn"] = "在库存、商店、周常商店、锻造界面添加搜索栏，玩家可以筛选物品。目前可以搜索物品名称、总评分、专长、祝福，但目前不能正常搜索珍品。查看 NexusMods 页面了解详情。",
