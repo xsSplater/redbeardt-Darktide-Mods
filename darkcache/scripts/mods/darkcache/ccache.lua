@@ -1,19 +1,20 @@
 local dc = DarkCache
 dc.CCache = {}
 dc.CCache.__index = dc.CCache
+local s = dc.CCache
 
-dc.CCache.new = function()
+s.new = function()
 	local self = {}
-	setmetatable(self, dc.CCache)
+	setmetatable(self, s)
 	self.items = {}
 	return self
 end
 
-dc.CCache.add = function(self, item)
+s.add = function(self, item)
 	self.items[#self.items + 1] = item
 end
 
-dc.CCache.update = function(self)
+s.update = function(self)
 	for i = 1, #self.items do
 		self.items[i]:update()
 	end
@@ -32,7 +33,7 @@ dc.CCache.update = function(self)
 	end
 end
 
-dc.CCache.get = function(self, key)
+s.get = function(self, key)
 	for _, v in pairs(self.items) do
 		if v.key == key then
 			return v
@@ -42,11 +43,11 @@ dc.CCache.get = function(self, key)
 	return nil
 end
 
-dc.CCache.clear = function(self)
+s.clear = function(self)
 	self.items = {}
 end
 
-dc.CCache.has = function(self, key)
+s.has = function(self, key)
 	for i = 1, #self.items do
 		if self.items[i].key == key then
 			return true
@@ -56,11 +57,11 @@ dc.CCache.has = function(self, key)
 	return false
 end
 
-dc.CCache.is_empty = function(self)
+s.is_empty = function(self)
 	return not self.items or #self.items == 0
 end
 
-dc.CCache.remove = function(self, key)
+s.remove = function(self, key)
 	for i, v in ipairs(self.items) do
 		if v.key == key then
 			table.remove(self.items, i)

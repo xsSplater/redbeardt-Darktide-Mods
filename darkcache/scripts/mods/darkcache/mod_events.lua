@@ -3,7 +3,7 @@ local dc = DarkCache
 dc.mod.update = function(dt)
 	dc.update_delta = dc.update_delta + dt
 
-	if dc.update_delta < dc.update_interval or dc.Utils.player_in_mission() then
+	if dc.update_delta < dc.update_interval or RedTools.Utils.player_in_mission() then
 		return
 	end
 
@@ -23,9 +23,9 @@ dc.mod.on_game_state_changed = function(status, state_name)
 		local contracts_item = cache:get("contracts_list")
 
 		if contracts_item then
-			if dc.Utils.player_in_mission() then
+			if RedTools.Utils.player_in_mission() then
 				contracts_item:expire()
-			elseif dc.Utils.player_in_hub() then
+			elseif RedTools.Utils.player_in_hub() then
 				contracts_item:try_get_data()
 			end
 		end
@@ -33,10 +33,10 @@ dc.mod.on_game_state_changed = function(status, state_name)
 end
 
 dc.mod.on_setting_changed = function(setting_id)
-	dc.settings.cache[setting_id] = dc.mod:get(setting_id)
+	dc.settings_manager.cache[setting_id] = dc.mod:get(setting_id)
 
 	if setting_id == "dev_mode" then
-		dc.settings.update_chat_command_availability()
+		dc.settings_manager.update_chat_command_availability()
 	elseif setting_id == "armoury_caching" or
 			setting_id == "melk_caching" or
 			setting_id == "contracts_caching" then
@@ -55,5 +55,11 @@ dc.mod.on_setting_changed = function(setting_id)
 		dc.update_hub_caching_hooks()
 	end
 
-	dc.settings.announce(setting_id)
+	dc.settings_manager.announce(setting_id)
+end
+
+dc.mod.on_enabled = function(initial_call)
+	if initial_call then
+		dc.preload_hub()
+	end
 end

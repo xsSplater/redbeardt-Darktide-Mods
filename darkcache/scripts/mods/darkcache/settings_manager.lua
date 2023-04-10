@@ -1,8 +1,10 @@
 local dc = DarkCache
 
-dc.settings = {}
-dc.settings.cache = {}
-dc.settings.cache_key_groups = {
+dc.settings_manager = {}
+local s = dc.settings_manager -- scope
+
+s.cache = {}
+s.cache_key_groups = {
 	armoury_caching = { "credits_store" },
 	melk_caching = { "marks_store", "marks_store_temporary" },
 	contracts_caching = { "contracts_list" },
@@ -18,8 +20,8 @@ dc.settings.cache_key_groups = {
 	}
 }
 
-dc.settings.build_cache = function()
-	local cache = dc.settings.cache
+s.build_cache = function()
+	local cache = s.cache
 	cache.armoury_caching = dc.mod:get("armoury_caching")
 	cache.melk_caching = dc.mod:get("melk_caching")
 	cache.contracts_caching = dc.mod:get("contracts_caching")
@@ -28,9 +30,9 @@ dc.settings.build_cache = function()
 	cache.hub_caching = dc.mod:get("hub_caching")
 end
 
-dc.settings.announce = function(setting_id)
+s.announce = function(setting_id)
 	local loc_name = dc.mod:localize(setting_id)
-	local value = dc.settings.cache[setting_id]
+	local value = s.cache[setting_id]
 
 	if not loc_name or value == nil then
 		return
@@ -42,11 +44,11 @@ dc.settings.announce = function(setting_id)
 			dc.mod:localize("disabled")
 		) .. "."
 
-	str = str .. " " .. (dc.settings.get_explanation_text(setting_id, value))
+	str = str .. " " .. (s.get_explanation_text(setting_id, value))
 	dc.mod:echo(str)
 end
 
-dc.settings.get_explanation_text = function(setting_id, value)
+s.get_explanation_text = function(setting_id, value)
 	local text = nil
 
 	if setting_id == "premium_store_caching" then
@@ -59,11 +61,11 @@ dc.settings.get_explanation_text = function(setting_id, value)
 	return text or ""
 end
 
-dc.settings.is_cache_key_enabled = function(key)
+s.is_cache_key_enabled = function(key)
 	for setting_name, group in pairs(dc.key_setting_map) do
 		for _, cache_key in ipairs(group) do
 			if cache_key == key then
-				return dc.settings.cache[setting_name]
+				return s.cache[setting_name]
 			end
 		end
 	end
@@ -71,8 +73,8 @@ dc.settings.is_cache_key_enabled = function(key)
 	return false
 end
 
-dc.settings.update_chat_command_availability = function()
-	(dc.settings.cache.dev_mode and
+s.update_chat_command_availability = function()
+	(s.cache.dev_mode and
 		dc.mod.enable_all_commands or
 		dc.mod.disable_all_commands)(dc.mod)
 end

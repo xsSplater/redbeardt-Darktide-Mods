@@ -1,6 +1,7 @@
 local dc = DarkCache
 dc.CCacheItem = {}
 dc.CCacheItem.__index = dc.CCacheItem
+local s = dc.CCacheItem
 
 dc.fetch_enums = {
 	results = {
@@ -16,9 +17,9 @@ dc.fetch_enums = {
 	}
 }
 
-dc.CCacheItem.new = function(key, _fetch_cb, _response_cb, refresh_on_expiry)
+s.new = function(key, _fetch_cb, _response_cb, refresh_on_expiry)
 	local self = {}
-	setmetatable(self, dc.CCacheItem)
+	setmetatable(self, s)
 
 	self.data = nil
 	self.expired_at_time = -1
@@ -36,40 +37,41 @@ dc.CCacheItem.new = function(key, _fetch_cb, _response_cb, refresh_on_expiry)
 		reason = dc.fetch_enums.reasons.NONE
 	}
 
-	dc.dev.echo("New cache item: " .. key)
+	dc.rt:dev_echo("New cache item: " .. key)
 	return self
 end
 
-dc.CCacheItem.try_get_data = function(self)
+s.try_get_data = function(self)
 	if self.fetching then
-		dc.dev.echo(self.key .. " already fetching.")
+		dc.rt:dev_echo(self.key .. " already fetching.")
 		return { status = "already_fetching" }
 	end
 
 	-- Since we're trying to *get* the data right now and it's expired, we have
 	-- no choice but to immediately fetch.
 	if self:is_expired() then
-		dc.dev.echo(self.key .. " expired & data needed. Triggering refresh.")
+		dc.rt:dev_echo(self.key .. " expired & data needed. Triggering refresh.")
 		self:refresh()
 		return self.data
 	end
 
-	dc.dev.echo(self.key .. " hit.")
+	dc.rt:dev_echo(self.key .. " hit.")
 	return self.data
 end
 
-dc.CCacheItem.is_expired = function(self)
+s.is_expired = function(self)
 	return dc.server_time > self.expires_at_time
 end
 
-dc.CCacheItem.expire = function(self)
+s.expire = function(self)
 	self.expired_at_time = dc.server_time
 	self.expires_at_time = -1
 	self.needs_refresh = self.refresh_on_expiry
 end
 
-dc.CCacheItem.fetch = function(self)
-	dc.dev.echo(self.key .. " fetching...")
+s.fetch = function(self)
+	dc.rt:dev_echo(self.key .. " fetching...")
+
 	self.last_fetch.time = dc.server_time
 	self.last_fetch.result = dc.fetch_enums.results.FAILED
 	self.last_fetch.reason = dc.fetch_enums.reasons.FAILED_BEFORE_RESPONSE
@@ -100,7 +102,7 @@ dc.CCacheItem.fetch = function(self)
 	return nil
 end
 
-dc.CCacheItem.has_data = function(self)
+s.has_data = function(self)
 	for _, _ in pairs(self.data or {}) do
 		return true
 	end
@@ -110,7 +112,7 @@ end
 
 -- Fetches and stores fresh data. Should be called by CCache as part of 
 -- endpoint-call staggering code.
-dc.CCacheItem.refresh = function(self)
+s.refresh = function(self)
 	self.needs_refresh = false
 	self.data = self:fetch()
 
@@ -119,7 +121,7 @@ dc.CCacheItem.refresh = function(self)
 	end
 end
 
-dc.CCacheItem.update = function(self)
+s.update = function(self)
 	if not self.needs_refresh and
 			self.refresh_on_expiry and
 			self:is_expired() and

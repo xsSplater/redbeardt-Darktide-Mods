@@ -1,4 +1,5 @@
 local dc = DarkCache
+local settings_mgr = dc.settings_manager
 
 dc.mod:hook_safe("Account", "set_selected_character", function(_, char_id)
 	dc.current_char_id = char_id
@@ -7,8 +8,8 @@ end)
 
 dc.mod:hook_safe("MainMenuView", "init", function()
 	dc.current_char_id = nil
-	dc.settings.build_cache()
-	dc.settings.update_chat_command_availability()
+	settings_mgr.build_cache()
+	settings_mgr.update_chat_command_availability()
 	dc.build_agnostic_cache()
 	dc.update_hub_caching_hooks()
 end)
@@ -72,7 +73,6 @@ local refresh_contracts = function(func, ...)
 			local item = cache:get("contracts_list")
 
 			if item then
-				dc.dev.echo("Got contracts_list. Expiring and refreshing...")
 				item:expire()
 				item:try_get_data()
 			end
@@ -119,7 +119,7 @@ end)
 -- info for the premium store view so that the total data package that results
 -- from the function's default recursive logic can be captured and cached.
 dc.mod:hook("StoreView", "_update_account_items", function(func, self, wrapped, promise)
-	if not dc.settings.cache.premium_store_caching then
+	if not settings_mgr.cache.premium_store_caching then
 		return func(self, wrapped, promise)
 	end
 

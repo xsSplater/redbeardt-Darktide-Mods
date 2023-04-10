@@ -6,7 +6,7 @@
 -- 	local gear_id = real_item.gear_id or real_item.name
 --
 -- 	if cache[gear_id] then
--- 		dc.dev.echo("Retrieving from cache with gear_id " .. gear_id)
+-- 		dc.rt:dev_echo("Retrieving from cache with gear_id " .. gear_id)
 -- 		return cache[gear_id]
 -- 	end
 --

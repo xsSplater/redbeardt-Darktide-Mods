@@ -6,10 +6,10 @@ local expiry_from_rot_end = function(cache_item, data)
 end
 
 dc.init_cache_armoury = function(cache)
-	local store = dc.Utils.nonil(Managers, "data_service", "store")
+	local store = RedTools.Utils.nil_check(Managers, "data_service", "store")
 
 	if not store then
-		return dc.dev.error("Managers.data_service.store missing.")
+		return dc.rt:dev_error("Managers.data_service.store missing.")
 	end
 
 	if store.get_credits_store then
@@ -38,10 +38,10 @@ dc.init_cache_armoury = function(cache)
 end
 
 dc.init_cache_melk = function(cache)
-	local store = dc.Utils.nonil(Managers, "data_service", "store")
+	local store = RedTools.Utils.nil_check(Managers, "data_service", "store")
 
 	if not store then
-		return dc.dev.error("Managers.data_service.store missing.")
+		return dc.rt:dev_error("Managers.data_service.store missing.")
 	end
 
 	if store.get_marks_store_temporary then
@@ -62,25 +62,25 @@ dc.init_cache_melk = function(cache)
 end
 
 dc.init_cache_contracts = function(cache)
-	local contracts = dc.Utils.nonil(Managers, "backend", "interfaces", "contracts")
+	local contracts = RedTools.Utils.nil_check(Managers, "backend", "interfaces", "contracts")
 
 	if not contracts then
-		return dc.dev.error("Managers.backend.interfaces.contracts missing.")
+		return dc.rt:dev_error("Managers.backend.interfaces.contracts missing.")
 	end
 
 	if contracts.get_current_contract then
 		cache:add(dc.CCacheItem.new("contracts_list",
 			function()
-				return contracts:get_current_contract(dc.Utils.get_current_char_id())
+				return contracts:get_current_contract(dc.get_current_char_id())
 			end, nil, false))
 	end
 end
 
 dc.init_cache_mission_board = function(cache)
-	local mission_board = dc.Utils.nonil(Managers, "data_service", "mission_board")
+	local mission_board = RedTools.Utils.nil_check(Managers, "data_service", "mission_board")
 
 	if not mission_board then
-		return dc.dev.error("Managers.data_service.mission_board missing.")
+		return dc.rt:dev_error("Managers.data_service.mission_board missing.")
 	end
 
 	cache:add(dc.CCacheItem.new("mission_board",
@@ -99,10 +99,10 @@ dc.init_cache_mission_board = function(cache)
 end
 
 dc.init_cache_premium = function(cache)
-	local store = dc.Utils.nonil(Managers, "data_service", "store")
+	local store = RedTools.Utils.nil_check(Managers, "data_service", "store")
 
 	if not store then
-		return dc.dev.error("Managers.data_service.store missing.")
+		return dc.rt:dev_error("Managers.data_service.store missing.")
 	end
 
 	cache:add(dc.CCacheItem.new("premium_store_account_update",

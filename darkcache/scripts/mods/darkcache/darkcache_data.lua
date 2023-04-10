@@ -29,7 +29,11 @@ return {
 			}, {
 				setting_id = "hub_caching",
 				type = "checkbox",
-				default_value = true
+				default_value = false
+			}, {
+				setting_id = "hub_preloading",
+				type = "checkbox",
+				default_value = false
 			}, {
 				setting_id = "dev_mode",
 				type = "checkbox",
